@@ -31,7 +31,8 @@ export default function Home() {
         </nav>
       </header>
       
-      <main className="bg-white px-10 md:px-20 lg:px-40 dark:bg-gray-900 pt-20">
+      <main className="bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-900 dark:to-gray-800 px-10 md:px-20 lg:px-40 pt-20">
+
         <section className="min-h-screen">
           <nav className= "py-10 mb-12 flex justify-between dark:bg-white">
           {/* <h1 className='text-xl  font-burtons '>Developed by Sarthak Vashistha with ♥️ </h1> */}
@@ -44,7 +45,7 @@ export default function Home() {
               href = "https://drive.google.com/file/d/1xD1Lgkzj84BWdTKrw3GZcrIQYOVQrdVv/view?usp=sharing">Resume</a></li>
           </ul>
           </nav>
-          <div className='text-center p-10'>
+          <div className='text-center p-10 '>
             <h2 className='text-5xl py-2 text-teal-600 dark:text-teal-400font-medium md:text-6xl'> Sarthak Vashistha</h2>
             <h3 className='text-2xl py-2 md:text-3xl'> Software Developer</h3>
             <p className=' text-md py-5 leading-8 text-grey-800 md:text-xl max-w-xl mx-auto'>A dedicated Full Stack Software Developer specializing in Android and React Native development, I am passionate about creating innovative and efficient solutions that enhance user experiences and drive business success. With a diverse skill set in both mobile and web development, I bring a comprehensive approach to every project, ensuring robust and scalable applications.
