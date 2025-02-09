@@ -8,6 +8,8 @@ import android from '../../public/android-logo.jpg';
 import mern from '../../public/MERN.jpeg';
 import dataScience from '../../public/data-science.jpg';
 import { useState } from 'react';
+import Chatbot from "../components/Chatbot";
+
 
 export default function Home() {
   const [darkMode, setDarkMode] = useState(false);
@@ -200,6 +202,7 @@ export default function Home() {
           </div>
         </section>
       </main>
+      <Chatbot />
     </div>
   );
 }
