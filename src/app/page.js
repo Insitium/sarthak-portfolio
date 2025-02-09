@@ -21,19 +21,53 @@ export default function Home() {
       </Head>
       {/* Header Section */}
       <header className="fixed top-0 left-0 w-full bg-white dark:bg-gray-900 shadow-md z-50">
-        <nav className="py-4 px-10 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-teal-500">Sarthak Vashistha</h1>
-          <ul className="flex space-x-6">
-            <li><a href="#about" className="text-gray-700 dark:text-white hover:text-teal-500">About</a></li>
-            <li><a href="#skills" className="text-gray-700 dark:text-white hover:text-teal-500">Skills</a></li>
-            <li><a href="#portfolio" className="text-gray-700 dark:text-white hover:text-teal-500">Portfolio</a></li>
-          </ul>
-        </nav>
-      </header>
+  <nav className="py-4 px-10 flex justify-between items-center">
+    <h1 className="text-xl font-bold text-teal-500">Sarthak Vashistha</h1>
+    <ul className="flex space-x-6">
+      <li>
+        <a
+          href="#about"
+          className="text-gray-700 dark:text-white hover:text-teal-500 cursor-pointer"
+          onClick={(e) => {
+            e.preventDefault();
+            document.getElementById("about").scrollIntoView({ behavior: "smooth" });
+          }}
+        >
+          About
+        </a>
+      </li>
+      <li>
+        <a
+          href="#skills"
+          className="text-gray-700 dark:text-white hover:text-teal-500 cursor-pointer"
+          onClick={(e) => {
+            e.preventDefault();
+            document.getElementById("skills").scrollIntoView({ behavior: "smooth" });
+          }}
+        >
+          Skills
+        </a>
+      </li>
+      <li>
+        <a
+          href="#portfolio"
+          className="text-gray-700 dark:text-white hover:text-teal-500 cursor-pointer"
+          onClick={(e) => {
+            e.preventDefault();
+            document.getElementById("portfolio").scrollIntoView({ behavior: "smooth" });
+          }}
+        >
+          Portfolio
+        </a>
+      </li>
+    </ul>
+  </nav>
+</header>
+
       
       <main className="bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-900 dark:to-gray-800 px-10 md:px-20 lg:px-40 pt-20">
 
-        <section className="min-h-screen">
+        <section id="about" className="min-h-screen">
           <nav className= "py-10 mb-12 flex justify-between dark:bg-white">
           {/* <h1 className='text-xl  font-burtons '>Developed by Sarthak Vashistha with ♥️ </h1> */}
           <ul className="flex items-center">
@@ -46,10 +80,12 @@ export default function Home() {
           </ul>
           </nav>
           <div className='text-center p-10 '>
+          
             <h2 className='text-5xl py-2 text-teal-600 dark:text-teal-400font-medium md:text-6xl'> Sarthak Vashistha</h2>
             <h3 className='text-2xl py-2 md:text-3xl'> Software Developer</h3>
             <p className=' text-md py-5 leading-8 text-grey-800 md:text-xl max-w-xl mx-auto'>A dedicated Full Stack Software Developer specializing in Android and React Native development, I am passionate about creating innovative and efficient solutions that enhance user experiences and drive business success. With a diverse skill set in both mobile and web development, I bring a comprehensive approach to every project, ensuring robust and scalable applications.
             </p>
+            
           </div>
           <div className='text-5xl flex justify-center gap-16 py-3 text-gray-600'>
             <a href='https://www.linkedin.com/in/sarthak-vashistha/'>
@@ -71,7 +107,7 @@ export default function Home() {
             />
           </div>
         </section>
-        <section>
+        <section id ="skills" className='py-20'>
           <div>
             <h3 className='text-3xl py-1'> Skills </h3>
             <h6 className='text-2xl py-1'> Software Developer </h6>
@@ -135,7 +171,7 @@ export default function Home() {
             
           </div>
         </section>
-        <section>
+        <section id ='portfolio' className='py-20'>
           <div>
             <h3 className='text-3xl py-1'> Portfolio</h3>
             
