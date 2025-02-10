@@ -178,8 +178,8 @@ export default function Home() {
             <h3 className='text-3xl py-1'> Portfolio</h3>
             
           </div>
-         
-          <div className='shadow-lg p-10 rounded-xl my-10 dark:bg-white text-center'>
+          <div className="lg:flex lg:gap-10">
+          <div className="shadow-lg p-10 rounded-xl my-10 dark:bg-white text-center ">
             <div className='video-container mb-6'> 
               <iframe
                 width="100%"
@@ -199,6 +199,28 @@ export default function Home() {
                 <ul>Built an Alumni Portal with React Native (frontend) and Firebase (backend), featuring login/auth, posts, comments, search, profile editing, and batchmate content access. </ul>
               </ul>
             </div>
+          </div>
+          <div className='shadow-lg p-10 rounded-xl my-10 dark:bg-white text-center'>
+            <div className='video-container mb-6'> 
+              <iframe
+                width="100%"
+                height="400"
+                src="https://www.youtube.com/embed/ttNy2XOnuqA"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+            <div className='technologies-used'>
+              <h3 className='text-xl font-bold mb-4 text-teal-500'>Technologies Used:</h3>
+              <ul className='list-disc list-inside'>
+                <ul>Numpy</ul>
+                <ul>Pandas</ul>
+                <ul>Explored Boston Housing prices Dataset to predict the prices of the houses using Machine Learning regression algorithms and tools including Numpy and </ul>
+              </ul>
+            </div>
+          </div>
           </div>
         </section>
       </main>

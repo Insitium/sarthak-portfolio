@@ -883,6 +883,10 @@ body {
     flex-wrap: wrap;
   }
 
+  .lg\:gap-10 {
+    gap: 2.5rem;
+  }
+
   .lg\:px-40 {
     padding-left: 10rem;
     padding-right: 10rem;
