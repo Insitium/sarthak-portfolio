@@ -78,7 +78,7 @@ export default function Home() {
                 } className='cursor-pointer text-2xl'/>
               </li> */}
               <li><a  className='bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-4 py-2 rounded-md ml-8' 
-              href = "https://drive.google.com/file/d/1xD1Lgkzj84BWdTKrw3GZcrIQYOVQrdVv/view?usp=sharing">Resume</a></li>
+              href = "https://drive.google.com/file/d/1mOs7RHAFa8reP9RRhqjwmN0YE90hkIu5/view?usp=sharing">Resume</a></li>
           </ul>
           </nav>
           <div className='text-center p-10 '>
