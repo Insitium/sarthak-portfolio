@@ -85,7 +85,7 @@ export default function Home() {
           
             <h2 className='text-5xl py-2 text-teal-600 dark:text-teal-400font-medium md:text-6xl'> Sarthak Vashistha</h2>
             <h3 className='text-2xl py-2 md:text-3xl'> Software Developer</h3>
-            <p className=' text-md py-5 leading-8 text-grey-800 md:text-xl max-w-xl mx-auto'>A dedicated Full Stack Software Developer specializing in Android and React Native development, I am passionate about creating innovative and efficient solutions that enhance user experiences and drive business success. With a diverse skill set in both mobile and web development, I bring a comprehensive approach to every project, ensuring robust and scalable applications.
+            <p className=' text-md py-5 leading-8 text-grey-800 md:text-xl max-w-xl mx-auto'>A dedicated Software Developer specializing in Android and React Native development, I am passionate about creating innovative and efficient solutions that enhance user experiences and drive business success. With a diverse skill set in both mobile and web development, I bring a comprehensive approach to every project, ensuring robust and scalable applications.
             </p>
             
           </div>
