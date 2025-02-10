@@ -217,7 +217,7 @@ export default function Home() {
               <ul className='list-disc list-inside'>
                 <ul>Numpy</ul>
                 <ul>Pandas</ul>
-                <ul>Explored Boston Housing prices Dataset to predict the prices of the houses using Machine Learning regression algorithms and tools including Numpy and </ul>
+                <ul>Explored Boston Housing prices Dataset to predict the prices of the houses using Machine Learning regression algorithms and tools including Numpy and Pandas</ul>
               </ul>
             </div>
           </div>
