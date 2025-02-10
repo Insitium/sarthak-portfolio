@@ -64,14 +64,22 @@ export default function Chatbot() {
 
   return (
     <>
-      {/* Floating Chat Icon */}
+      {/* Floating Chat Icon with "Talk to me" */}
       {!open && (
-        <button
-          onClick={() => setOpen(true)}
-          className="fixed bottom-5 right-5 bg-teal-500 text-white p-3 rounded-full shadow-lg hover:bg-teal-600 transition"
-        >
-          <MessageCircle size={24} />
-        </button>
+        <div className="fixed bottom-5 right-5 flex flex-col items-center">
+          {/* Text above the icon */}
+          <div className="mb-2 bg-teal-500 text-white text-sm px-3 py-1 rounded-lg shadow-lg">
+            Talk to me
+          </div>
+
+          {/* Chat Icon */}
+          <button
+            onClick={() => setOpen(true)}
+            className="bg-teal-500 text-white p-3 rounded-full shadow-lg hover:bg-teal-600 transition"
+          >
+            <MessageCircle size={24} />
+          </button>
+        </div>
       )}
 
       {/* Chatbox */}
@@ -106,4 +114,3 @@ export default function Chatbot() {
     </>
   );
 }
-
