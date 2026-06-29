@@ -270,7 +270,7 @@ export default function Home() {
               <span className="gradient-text">Build</span>
             </h2>
             <p className="text-slate-500 max-w-lg mx-auto text-sm leading-relaxed">
-              From training ML models to shipping cross-platform apps — here's everything I bring to the table.
+              From training ML models to shipping cross-platform apps — here&apos;s everything I bring to the table.
             </p>
           </div>
 
@@ -310,7 +310,7 @@ export default function Home() {
               <span className="gradient-text">AI Work</span>
             </h2>
             <p className="text-slate-500 max-w-lg mx-auto text-sm leading-relaxed">
-              Real things I've built — mobile apps, machine learning models, and live AI integrations.
+              Real things I&apos;ve built — mobile apps, machine learning models, and live AI integrations.
             </p>
           </div>
 
