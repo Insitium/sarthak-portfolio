@@ -1,45 +1,54 @@
 "use client";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import sarthak from "../../public/sarthak.jpg";
 import { AiFillGithub, AiFillLinkedin, AiFillYoutube } from "react-icons/ai";
 import { Brain, Code2, Smartphone, Sparkles, Zap } from "lucide-react";
 import Chatbot from "../components/Chatbot";
 
-const R = (delay = 0) => ({
-  opacity: 0,
-  animation: `fadeInUp 0.65s ease ${delay}ms forwards`,
-});
+// ── Typewriter hook ───────────────────────────────────────────────────────────
+function useTypewriter(text, speed = 52, delay = 900) {
+  const [displayed, setDisplayed] = useState("");
+  const [done, setDone] = useState(false);
+  useEffect(() => {
+    let i = 0;
+    setDisplayed("");
+    setDone(false);
+    const t = setTimeout(() => {
+      const iv = setInterval(() => {
+        i++;
+        setDisplayed(text.slice(0, i));
+        if (i >= text.length) { clearInterval(iv); setDone(true); }
+      }, speed);
+      return () => clearInterval(iv);
+    }, delay);
+    return () => clearTimeout(t);
+  }, [text, speed, delay]);
+  return { displayed, done };
+}
 
+// ── Data ──────────────────────────────────────────────────────────────────────
 const skillCategories = [
   {
     name: "AI & Machine Learning",
     icon: <Brain size={22} />,
     colorClass: "text-purple-400",
     borderClass: "border-purple-500/25 hover:border-purple-400/60 hover:shadow-[0_0_30px_rgba(168,85,247,0.12)]",
-    skills: [
-      "Python", "Scikit-learn", "Pandas", "NumPy",
-      "OpenAI API", "ML Regression", "EDA", "Predictive Analytics",
-    ],
+    skills: ["Python", "Scikit-learn", "Pandas", "NumPy", "OpenAI API", "ML Regression", "EDA", "Predictive Analytics"],
   },
   {
     name: "Mobile Development",
     icon: <Smartphone size={22} />,
     colorClass: "text-cyan-400",
     borderClass: "border-cyan-500/25 hover:border-cyan-400/60 hover:shadow-[0_0_30px_rgba(0,212,255,0.12)]",
-    skills: [
-      "React Native", "Android", "Jetpack Compose",
-      "Kotlin", "MVVM Architecture", "Firebase",
-    ],
+    skills: ["React Native", "Android", "Jetpack Compose", "Kotlin", "MVVM Architecture", "Firebase"],
   },
   {
     name: "Web & Backend",
     icon: <Code2 size={22} />,
     colorClass: "text-emerald-400",
     borderClass: "border-emerald-500/25 hover:border-emerald-400/60 hover:shadow-[0_0_30px_rgba(16,185,129,0.12)]",
-    skills: [
-      "React.js", "Next.js", "Node.js",
-      "Express.js", "MongoDB", "REST APIs", "SQL",
-    ],
+    skills: ["React.js", "Next.js", "Node.js", "Express.js", "MongoDB", "REST APIs", "SQL"],
   },
 ];
 
@@ -84,14 +93,90 @@ const projects = [
 
 const navItems = ["About", "Skills", "Projects"];
 
+// Deterministic particle colours by index
+const PARTICLE_COLORS = ["0,212,255", "168,85,247", "16,185,129"];
+
 export default function Home() {
+  const cursorRef = useRef(null);
+  const [particles, setParticles] = useState([]);
+  const { displayed: subtitle, done: subtitleDone } = useTypewriter("Full-Stack Developer & AI Engineer");
+
+  // ── Cursor glow (no re-render on move) ──────────────────────────────────
+  useEffect(() => {
+    const el = cursorRef.current;
+    if (!el) return;
+    const onMove = (e) => {
+      el.style.left = e.clientX + "px";
+      el.style.top = e.clientY + "px";
+      el.style.opacity = "1";
+    };
+    const onLeave = () => { el.style.opacity = "0"; };
+    window.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseleave", onLeave);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseleave", onLeave);
+    };
+  }, []);
+
+  // ── Generate particles client-side only (avoids SSR hydration mismatch) ──
+  useEffect(() => {
+    setParticles(
+      Array.from({ length: 28 }, (_, i) => ({
+        id: i,
+        x: (i * 3.7 + 5) % 100,
+        y: (i * 7.1 + 10) % 100,
+        size: (i % 4) * 0.6 + 1,
+        delay: (i * 0.43) % 12,
+        duration: (i % 5) * 4 + 18,
+        opacity: (i % 5) * 0.08 + 0.12,
+        color: PARTICLE_COLORS[i % 3],
+      }))
+    );
+  }, []);
+
+  // ── Scroll reveal via IntersectionObserver ───────────────────────────────
+  useEffect(() => {
+    const els = document.querySelectorAll(".reveal-up, .reveal-left, .reveal-right, .reveal-scale");
+    const obs = new IntersectionObserver(
+      (entries) => entries.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add("revealed"); obs.unobserve(e.target); }
+      }),
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+    );
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+
+  // ── 3-D card tilt ────────────────────────────────────────────────────────
+  const handleTilt = useCallback((e) => {
+    const el = e.currentTarget;
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    el.style.transform = `perspective(900px) rotateX(${-y * 7}deg) rotateY(${x * 7}deg) translateY(-6px)`;
+  }, []);
+
+  const resetTilt = useCallback((e) => {
+    e.currentTarget.style.transform = "";
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#05050f] text-slate-300">
+      {/* ── Cursor glow ── */}
+      <div
+        ref={cursorRef}
+        className="cursor-glow"
+        style={{ opacity: 0, left: "-999px", top: "-999px" }}
+      />
+
       {/* ── Fixed Nav ── */}
-      <header className="fixed top-0 left-0 w-full z-50 border-b border-white/[0.05]"
-        style={{ background: "rgba(5,5,15,0.8)", backdropFilter: "blur(18px)" }}>
+      <header
+        className="fixed top-0 left-0 w-full z-50 border-b border-white/[0.05]"
+        style={{ background: "rgba(5,5,15,0.85)", backdropFilter: "blur(18px)" }}
+      >
         <nav className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <span className="gradient-text font-bold text-xl tracking-tight">SV</span>
+          <span className="gradient-text font-bold text-xl tracking-tight logo-glow cursor-default select-none">SV</span>
 
           <ul className="hidden sm:flex gap-8 text-sm text-slate-500">
             {navItems.map((item) => (
@@ -100,11 +185,9 @@ export default function Home() {
                   href={`#${item.toLowerCase()}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    document
-                      .getElementById(item.toLowerCase())
-                      ?.scrollIntoView({ behavior: "smooth" });
+                    document.getElementById(item.toLowerCase())?.scrollIntoView({ behavior: "smooth" });
                   }}
-                  className="hover:text-cyan-400 transition-colors cursor-pointer"
+                  className="nav-link cursor-pointer"
                 >
                   {item}
                 </a>
@@ -128,6 +211,22 @@ export default function Home() {
         id="about"
         className="grid-bg min-h-screen flex items-center justify-center pt-24 pb-16 px-6 relative overflow-hidden"
       >
+        {/* Floating particles */}
+        {particles.map((p) => (
+          <div
+            key={p.id}
+            className="absolute rounded-full pointer-events-none"
+            style={{
+              left: `${p.x}%`,
+              top: `${p.y}%`,
+              width: p.size,
+              height: p.size,
+              background: `rgba(${p.color}, ${p.opacity})`,
+              animation: `particle-drift ${p.duration}s ease-in-out ${p.delay}s infinite`,
+            }}
+          />
+        ))}
+
         {/* Ambient glow orbs */}
         <div
           className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full pointer-events-none"
@@ -138,7 +237,7 @@ export default function Home() {
           style={{ background: "radial-gradient(circle, rgba(168,85,247,0.07) 0%, transparent 70%)" }}
         />
 
-        <div className="max-w-6xl mx-auto w-full flex flex-col-reverse lg:flex-row items-center gap-16 lg:gap-24">
+        <div className="max-w-6xl mx-auto w-full flex flex-col-reverse lg:flex-row items-center gap-16 lg:gap-24 relative z-10">
           {/* Text */}
           <div className="flex-1 text-center lg:text-left" style={{ animation: "fadeInUp 0.8s ease forwards" }}>
             <div className="inline-flex items-center gap-2 mb-5 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium">
@@ -151,8 +250,10 @@ export default function Home() {
               <span className="gradient-text">Vashistha</span>
             </h1>
 
-            <p className="text-lg text-slate-400 mb-3 font-medium">
-              Full-Stack Developer &amp; AI Engineer
+            {/* Typewriter subtitle */}
+            <p className="text-lg text-slate-400 mb-3 font-medium min-h-[1.75rem]">
+              {subtitle}
+              {!subtitleDone && <span className="tw-cursor" />}
             </p>
 
             <p className="text-slate-500 max-w-md mx-auto lg:mx-0 mb-8 leading-relaxed text-sm">
@@ -183,38 +284,23 @@ export default function Home() {
 
             {/* Socials */}
             <div className="flex gap-5 justify-center lg:justify-start text-slate-600 text-2xl">
-              <a
-                href="https://www.linkedin.com/in/sarthak-vashistha/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-cyan-400 transition-colors"
-              >
+              <a href="https://www.linkedin.com/in/sarthak-vashistha/" target="_blank" rel="noopener noreferrer"
+                className="hover:text-cyan-400 transition-colors hover:drop-shadow-[0_0_8px_rgba(0,212,255,0.8)]">
                 <AiFillLinkedin />
               </a>
-              <a
-                href="https://github.com/Insitium"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-cyan-400 transition-colors"
-              >
+              <a href="https://github.com/Insitium" target="_blank" rel="noopener noreferrer"
+                className="hover:text-cyan-400 transition-colors hover:drop-shadow-[0_0_8px_rgba(0,212,255,0.8)]">
                 <AiFillGithub />
               </a>
-              <a
-                href="https://www.youtube.com/@sarthakvashistha6290/videos"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-red-400 transition-colors"
-              >
+              <a href="https://www.youtube.com/@sarthakvashistha6290/videos" target="_blank" rel="noopener noreferrer"
+                className="hover:text-red-400 transition-colors hover:drop-shadow-[0_0_8px_rgba(248,113,113,0.8)]">
                 <AiFillYoutube />
               </a>
             </div>
           </div>
 
           {/* Photo */}
-          <div
-            className="relative flex-shrink-0"
-            style={{ animation: "fadeIn 1s ease 0.3s both" }}
-          >
+          <div className="relative flex-shrink-0" style={{ animation: "fadeIn 1s ease 0.3s both" }}>
             <div
               className="w-60 h-60 lg:w-72 lg:h-72 float-animation rounded-full photo-glow border-2 overflow-hidden"
               style={{ borderColor: "rgba(0,212,255,0.35)" }}
@@ -232,9 +318,7 @@ export default function Home() {
             {/* Spinning ring */}
             <div
               className="absolute -inset-6 rounded-full spin-slow"
-              style={{
-                border: "1px dashed rgba(168,85,247,0.25)",
-              }}
+              style={{ border: "1px dashed rgba(168,85,247,0.25)" }}
             />
             {/* Second ring */}
             <div
@@ -246,9 +330,7 @@ export default function Home() {
             />
 
             {/* Floating badge */}
-            <div
-              className="absolute -bottom-3 -right-3 bg-[#0d0d1f] border border-cyan-500/30 rounded-xl px-3 py-2 flex items-center gap-2 shadow-lg"
-            >
+            <div className="absolute -bottom-3 -right-3 bg-[#0d0d1f] border border-cyan-500/30 rounded-xl px-3 py-2 flex items-center gap-2 shadow-lg">
               <Sparkles size={14} className="text-cyan-400" />
               <span className="text-xs text-slate-300 font-medium">AI Engineer</span>
             </div>
@@ -264,10 +346,9 @@ export default function Home() {
         />
 
         <div className="max-w-6xl mx-auto">
-          <div style={R(100)} className="text-center mb-16">
+          <div className="text-center mb-16 reveal-up">
             <h2 className="text-4xl font-bold text-white mb-4">
-              What I{" "}
-              <span className="gradient-text">Build</span>
+              What I <span className="gradient-text">Build</span>
             </h2>
             <p className="text-slate-500 max-w-lg mx-auto text-sm leading-relaxed">
               From training ML models to shipping cross-platform apps — here&apos;s everything I bring to the table.
@@ -278,12 +359,14 @@ export default function Home() {
             {skillCategories.map((cat, i) => (
               <div
                 key={cat.name}
-                className={`glow-card rounded-2xl p-7 border transition-all duration-300 ${cat.borderClass}`}
-                style={R(200 + i * 120)}
+                className={`glow-card anim-border rounded-2xl p-7 border transition-all duration-300 ${cat.borderClass} reveal-scale`}
+                style={{ transitionDelay: `${i * 110}ms` }}
+                onMouseMove={handleTilt}
+                onMouseLeave={resetTilt}
               >
                 <div className={`mb-3 ${cat.colorClass}`}>{cat.icon}</div>
                 <h3 className={`text-base font-semibold mb-5 ${cat.colorClass}`}>{cat.name}</h3>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 stagger">
                   {cat.skills.map((skill) => (
                     <span key={skill} className="skill-badge text-xs px-3 py-1 rounded-full">
                       {skill}
@@ -304,10 +387,9 @@ export default function Home() {
         />
 
         <div className="max-w-6xl mx-auto">
-          <div style={R(100)} className="text-center mb-16">
+          <div className="text-center mb-16 reveal-up">
             <h2 className="text-4xl font-bold text-white mb-4">
-              Projects &amp;{" "}
-              <span className="gradient-text">AI Work</span>
+              Projects &amp; <span className="gradient-text">AI Work</span>
             </h2>
             <p className="text-slate-500 max-w-lg mx-auto text-sm leading-relaxed">
               Real things I&apos;ve built — mobile apps, machine learning models, and live AI integrations.
@@ -318,8 +400,10 @@ export default function Home() {
             {projects.map((project, i) => (
               <div
                 key={project.title}
-                className={`glow-card rounded-2xl overflow-hidden border border-white/[0.06] transition-all duration-300 bg-gradient-to-br ${project.gradientBg} ${project.hoverBorder}`}
-                style={R(200 + i * 150)}
+                className={`glow-card anim-border rounded-2xl overflow-hidden border border-white/[0.06] transition-all duration-300 bg-gradient-to-br ${project.gradientBg} ${project.hoverBorder} reveal-up`}
+                style={{ transitionDelay: `${i * 120}ms` }}
+                onMouseMove={handleTilt}
+                onMouseLeave={resetTilt}
               >
                 {/* Media */}
                 {project.videoId && (
@@ -338,7 +422,6 @@ export default function Home() {
 
                 {project.isLive && (
                   <div className="aspect-video w-full bg-gradient-to-br from-emerald-950/60 to-teal-950/60 flex items-center justify-center relative overflow-hidden">
-                    {/* Grid bg in card */}
                     <div
                       className="absolute inset-0 opacity-30"
                       style={{
@@ -352,10 +435,7 @@ export default function Home() {
                       <p className="text-slate-500 text-xs mt-1">Bottom-right corner →</p>
                     </div>
                     <div className="absolute top-3 right-3 flex items-center gap-1.5">
-                      <span
-                        className="w-2 h-2 bg-emerald-400 rounded-full"
-                        style={{ animation: "ping-slow 1.5s ease infinite" }}
-                      />
+                      <span className="w-2 h-2 bg-emerald-400 rounded-full" style={{ animation: "ping-slow 1.5s ease infinite" }} />
                       <span className="text-emerald-400 text-xs font-medium">Live</span>
                     </div>
                   </div>
@@ -366,9 +446,7 @@ export default function Home() {
                   <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium inline-block mb-3 ${project.badgeClass}`}>
                     {project.badge}
                   </span>
-                  <h3 className="text-white font-semibold text-lg mb-2 leading-snug">
-                    {project.title}
-                  </h3>
+                  <h3 className="text-white font-semibold text-lg mb-2 leading-snug">{project.title}</h3>
                   <p className="text-slate-400 text-sm leading-relaxed mb-4">{project.description}</p>
                   <div className="flex flex-wrap gap-1.5">
                     {project.tech.map((t) => (
@@ -388,9 +466,8 @@ export default function Home() {
       <section className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
           <div
-            className="rounded-3xl p-10 md:p-16 text-center relative overflow-hidden"
+            className="rounded-3xl p-10 md:p-16 text-center relative overflow-hidden reveal-scale"
             style={{
-              ...R(150),
               background: "linear-gradient(135deg, rgba(0,212,255,0.06) 0%, rgba(168,85,247,0.06) 50%, rgba(16,185,129,0.06) 100%)",
               border: "1px solid rgba(0,212,255,0.15)",
             }}
@@ -412,8 +489,7 @@ export default function Home() {
                 </div>
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                Let&apos;s build something{" "}
-                <span className="gradient-text">intelligent</span>
+                Let&apos;s build something <span className="gradient-text">intelligent</span>
               </h2>
               <p className="text-slate-400 text-sm max-w-xl mx-auto mb-8 leading-relaxed">
                 I combine mobile, web, and AI engineering to ship products that actually work. If you have an idea, let&apos;s talk.
@@ -448,13 +524,16 @@ export default function Home() {
             <p className="text-slate-600 text-xs">Full-Stack Developer &amp; AI Engineer</p>
           </div>
           <div className="flex gap-5 text-slate-600 text-xl">
-            <a href="https://www.linkedin.com/in/sarthak-vashistha/" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors">
+            <a href="https://www.linkedin.com/in/sarthak-vashistha/" target="_blank" rel="noopener noreferrer"
+              className="hover:text-cyan-400 transition-colors hover:drop-shadow-[0_0_8px_rgba(0,212,255,0.8)]">
               <AiFillLinkedin />
             </a>
-            <a href="https://github.com/Insitium" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors">
+            <a href="https://github.com/Insitium" target="_blank" rel="noopener noreferrer"
+              className="hover:text-cyan-400 transition-colors hover:drop-shadow-[0_0_8px_rgba(0,212,255,0.8)]">
               <AiFillGithub />
             </a>
-            <a href="https://www.youtube.com/@sarthakvashistha6290/videos" target="_blank" rel="noopener noreferrer" className="hover:text-red-400 transition-colors">
+            <a href="https://www.youtube.com/@sarthakvashistha6290/videos" target="_blank" rel="noopener noreferrer"
+              className="hover:text-red-400 transition-colors hover:drop-shadow-[0_0_8px_rgba(248,113,113,0.8)]">
               <AiFillYoutube />
             </a>
           </div>

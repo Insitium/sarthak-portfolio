@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
 :root {
   --accent-cyan: #00d4ff;
   --accent-purple: #a855f7;
@@ -74,7 +80,184 @@ body {
   50%       { opacity: 0.5; transform: scale(1.4); }
 }
 
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes particle-drift {
+  0%         { transform: translateY(0)     translateX(0)    scale(1);   opacity: 0; }
+  8%         { opacity: 1; }
+  92%        { opacity: 0.6; }
+  100%       { transform: translateY(-100px) translateX(25px) scale(0.7); opacity: 0; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+@keyframes neon-flicker {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% {
+    text-shadow:
+      0 0  8px rgba(0,212,255,0.9),
+      0 0 20px rgba(0,212,255,0.5),
+      0 0 40px rgba(168,85,247,0.3);
+  }
+  19%, 21%, 54%, 56% { text-shadow: none; }
+}
+
+@keyframes rotate-gradient {
+  from { --angle: 0deg; }
+  to   { --angle: 360deg; }
+}
+
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-50px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(50px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
 /* ── Utility classes ── */
+
+/* Cursor glow — driven by direct DOM style updates (no re-render) */
+.cursor-glow {
+  position: fixed;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(circle, rgba(0,212,255,0.055) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: opacity 0.4s ease;
+  mix-blend-mode: screen;
+}
+
+/* Typewriter cursor */
+.tw-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 0.85em;
+  background: linear-gradient(to bottom, #00d4ff, #a855f7);
+  margin-left: 3px;
+  vertical-align: middle;
+  border-radius: 1px;
+  animation: blink 1s step-end infinite;
+}
+
+/* Scroll reveal */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.reveal-right {
+  opacity: 0;
+  transform: translateX(50px);
+  transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.88);
+  transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.revealed {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Stagger delays for children */
+.stagger > *:nth-child(1) { transition-delay:   0ms; }
+.stagger > *:nth-child(2) { transition-delay:  90ms; }
+.stagger > *:nth-child(3) { transition-delay: 180ms; }
+.stagger > *:nth-child(4) { transition-delay: 270ms; }
+.stagger > *:nth-child(5) { transition-delay: 360ms; }
+.stagger > *:nth-child(6) { transition-delay: 450ms; }
+.stagger > *:nth-child(7) { transition-delay: 540ms; }
+.stagger > *:nth-child(8) { transition-delay: 630ms; }
+
+/* Animated rotating-gradient border on hover */
+.anim-border {
+  position: relative;
+  isolation: isolate;
+}
+.anim-border::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--angle), transparent 25%, rgba(0,212,255,0.6) 50%, rgba(168,85,247,0.6) 75%, transparent 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1px;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  animation: rotate-gradient 2.5s linear infinite;
+  pointer-events: none;
+}
+.anim-border:hover::after {
+  opacity: 1;
+}
+
+/* Shimmer sweep on skill badges */
+.skill-badge {
+  position: relative;
+  overflow: hidden;
+}
+.skill-badge::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(0,212,255,0.18) 50%, transparent 100%);
+  background-size: 200% auto;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  animation: shimmer 2.5s linear infinite;
+}
+.skill-badge:hover::after {
+  opacity: 1;
+}
+
+/* Logo neon flicker on hover */
+.logo-glow:hover {
+  animation: neon-flicker 0.7s ease;
+}
+
+/* Nav link glow */
+.nav-link {
+  position: relative;
+  transition: color 0.25s ease;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, #00d4ff, #a855f7);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+.nav-link:hover::after { transform: scaleX(1); }
+.nav-link:hover { color: #e2e8f0; }
 
 .gradient-text {
   background: linear-gradient(135deg, #00d4ff 0%, #a855f7 50%, #10b981 100%);
