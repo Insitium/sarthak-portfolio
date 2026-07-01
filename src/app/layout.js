@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "Sarthak Vashistha",
-  description: "Full-Stack Developer & AI Engineer",
+  description: "AI Developer and Full Stack Developer",
   icons: {
     icon: "/icon.svg",
   },

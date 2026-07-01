@@ -61,7 +61,7 @@ const QA = [
   {
     patterns: ["who", "about", "sarthak", "yourself", "introduce", "tell me"],
     answer:
-      "Sarthak Vashistha is a Full-Stack Developer & AI Engineer. He builds everything from ML models and GPT-powered apps to React Native mobile apps and web backends. Passionate about turning complex problems into clean, working software.",
+      "Sarthak Vashistha is an AI Developer and Full Stack Developer. He builds everything from ML models and GPT-powered apps to React Native mobile apps and web backends. Passionate about turning complex problems into clean, working software.",
   },
   {
     patterns: ["hello", "hi", "hey", "sup", "yo", "howdy", "greet"],

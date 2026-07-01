@@ -4,6 +4,7 @@ import sarthak from "../../public/sarthak.jpg";
 import { AiFillGithub, AiFillLinkedin, AiFillYoutube } from "react-icons/ai";
 import { Brain, Code2, Smartphone, Sparkles, Zap } from "lucide-react";
 import Chatbot from "../components/Chatbot";
+import GamesArcade from "../components/games/GamesArcade";
 
 const R = (delay = 0) => ({
   opacity: 0,
@@ -152,7 +153,7 @@ export default function Home() {
             </h1>
 
             <p className="text-lg text-slate-400 mb-3 font-medium">
-              Full-Stack Developer &amp; AI Engineer
+              AI Developer and Full Stack Developer
             </p>
 
             <p className="text-slate-500 max-w-md mx-auto lg:mx-0 mb-8 leading-relaxed text-sm">
@@ -384,6 +385,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Games Arcade ── */}
+      <GamesArcade />
+
       {/* ── AI Callout Banner ── */}
       <section className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
@@ -445,7 +449,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
             <p className="gradient-text font-bold text-xl tracking-tight mb-1">Sarthak Vashistha</p>
-            <p className="text-slate-600 text-xs">Full-Stack Developer &amp; AI Engineer</p>
+            <p className="text-slate-600 text-xs">AI Developer and Full Stack Developer</p>
           </div>
           <div className="flex gap-5 text-slate-600 text-xl">
             <a href="https://www.linkedin.com/in/sarthak-vashistha/" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors">
